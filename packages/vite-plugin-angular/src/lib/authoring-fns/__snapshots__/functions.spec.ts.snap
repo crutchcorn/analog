@@ -1,0 +1,36 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`authoring functions > should process component as an analog file 1`] = `
+"import {Component} from "@analog/angular-fn";
+import {effect, signal} from "@angular/core";
+
+export default 
+    @Component({
+  selector: 'app-root',
+  standalone: true,
+  template: \`
+    <button (click)="add()">{{count}}</button>
+  \`
+})
+    class VirtualAnalogComponent {
+      data = (() => {
+  const count = signal(0);
+
+  function add() {
+    // We shouldn't export \`one\` here
+    const one = 123;
+    count.set(count() + 1);
+  }
+
+  effect(() => {
+    console.log(count());
+  })
+    return { add: add, count: count };
+})();
+
+      add = this.data.add;
+count = this.data.count;
+    }
+  
+"
+`;

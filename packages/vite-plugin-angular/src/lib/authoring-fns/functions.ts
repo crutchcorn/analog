@@ -155,12 +155,8 @@ function transformComponentUsage(
     );
   }
 
-  const fnFunctionDeclarations = fnBlock.getChildrenOfKind(
-    SyntaxKind.FunctionDeclaration
-  );
-  const fnVariableDeclarations = fnBlock.getChildrenOfKind(
-    SyntaxKind.VariableDeclaration
-  );
+  const fnFunctionDeclarations = fnBlock.getFunctions();
+  const fnVariableDeclarations = fnBlock.getVariableDeclarations();
 
   [...fnFunctionDeclarations, ...fnVariableDeclarations].forEach(
     (declaration) => {
