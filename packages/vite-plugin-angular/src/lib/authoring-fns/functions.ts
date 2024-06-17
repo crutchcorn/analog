@@ -66,11 +66,17 @@ function processFunctionFile(
    */
   const componentUsages = sourceFile
     .getDescendantsOfKind(SyntaxKind.CallExpression)
-    .filter(
-      (callExpression) =>
+    .reduce((prev, callExpression) => {
+      // We want to get the call expression that has the `Component` import alias as the first child, but we need to get
+      // the parent of the call expression to get the full `Component` call expression with the metadata and function body
+      if (
         callExpression.getFirstChildByKind(SyntaxKind.Identifier)?.getText() ===
         componentName
-    );
+      ) {
+        prev.push(callExpression.getParent() as CallExpression);
+      }
+      return prev;
+    }, [] as CallExpression[]);
 
   if (!componentUsages.length) {
     // Missing usage of \`Component\` from \`@analog/angular-fn\` in ${fileName}
