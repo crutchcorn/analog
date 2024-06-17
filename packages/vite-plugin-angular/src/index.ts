@@ -1,6 +1,7 @@
 import { angular } from './lib/angular-vite-plugin.js';
 export { PluginOptions } from './lib/angular-vite-plugin.js';
 export { compileAnalogFile } from './lib/authoring/analog.js';
+export { compileAngularFn } from './lib/authoring-fns/functions.js';
 export {
   MarkdownTemplateTransform,
   defaultMarkdownTemplateTransforms,

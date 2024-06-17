@@ -3,6 +3,7 @@ import { normalizePath } from '@ngtools/webpack/src/ivy/paths.js';
 import { readFileSync } from 'node:fs';
 import * as ts from 'typescript';
 import { compileAnalogFile } from './authoring/analog.js';
+import { compileAngularFn } from './authoring-fns/functions.js';
 import { TEMPLATE_TAG_REGEX } from './authoring/constants.js';
 import { MarkdownTemplateTransform } from './authoring/markdown-transform.js';
 
@@ -24,6 +25,11 @@ export function augmentHostWithResources(
       | {
           include: string[];
         };
+    supportFunctionComponents?:
+      | boolean
+      | {
+          include: string[];
+        };
 
     isProd?: boolean;
     markdownTemplateTransforms?: MarkdownTemplateTransform[];
@@ -35,27 +41,46 @@ export function augmentHostWithResources(
     resourceHost as ts.CompilerHost
   ).getSourceFile.bind(resourceHost);
 
-  if (options.supportAnalogFormat) {
+  if (options.supportAnalogFormat || options.supportFunctionComponents) {
     (resourceHost as ts.CompilerHost).getSourceFile = (
       fileName,
       languageVersionOrOptions,
       onError,
       ...parameters
     ) => {
-      if (fileName.endsWith('.analog.ts') || fileName.endsWith('.agx.ts')) {
-        const contents = readFileSync(
-          fileName.replace('.analog.ts', '.analog').replace('.agx.ts', '.agx'),
-          'utf-8'
-        );
-        const source = compileAnalogFile(fileName, contents, options.isProd);
+      if (options.supportAnalogFormat) {
+        if (fileName.endsWith('.analog.ts') || fileName.endsWith('.agx.ts')) {
+          const contents = readFileSync(
+            fileName
+              .replace('.analog.ts', '.analog')
+              .replace('.agx.ts', '.agx'),
+            'utf-8'
+          );
+          const source = compileAnalogFile(fileName, contents, options.isProd);
 
-        return ts.createSourceFile(
-          fileName,
-          source,
-          languageVersionOrOptions,
-          onError as any,
-          ...(parameters as any)
-        );
+          return ts.createSourceFile(
+            fileName,
+            source,
+            languageVersionOrOptions,
+            onError as any,
+            ...(parameters as any)
+          );
+        }
+      }
+
+      if (options.supportFunctionComponents) {
+        if (fileName.endsWith('.ts')) {
+          const contents = readFileSync(fileName, 'utf-8');
+          const source = compileAngularFn(fileName, contents, options.isProd);
+
+          return ts.createSourceFile(
+            fileName,
+            source,
+            languageVersionOrOptions,
+            onError as any,
+            ...(parameters as any)
+          );
+        }
       }
 
       return baseGetSourceFile.call(

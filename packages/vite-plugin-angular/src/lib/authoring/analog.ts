@@ -647,7 +647,7 @@ function getIOStructure(
 /**
  * Hyphenated to UpperCamelCase
  */
-function toClassName(str: string) {
+export function toClassName(str: string) {
   return toCapitalCase(toPropertyName(str));
 }
 /**
