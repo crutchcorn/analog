@@ -84,13 +84,14 @@ function processFunctionFile(
   }
 
   componentUsages.forEach((componentUsage) => {
-    transformComponentUsage(componentUsage, entityName, isProd);
+    transformComponentUsage(sourceFile, componentUsage, entityName, isProd);
   });
 
   return sourceFile.getText();
 }
 
 function transformComponentUsage(
+  sourceFile: SourceFile,
   /**
    * `Component({...})(() => { ... })`
    */
@@ -187,7 +188,7 @@ function transformComponentUsage(
 
   fnBlock.addStatements(`return ${returnObject};`);
 
-  return `
+  const newComponentUsage = `
     @Component(${componentMetadata})
     class ${entityName} {
       data = (${fnToTransform.getText()})();
@@ -197,4 +198,10 @@ function transformComponentUsage(
         .join('\n')}
     }
   `;
+
+  // Replace the original component usage with the new component usage
+  sourceFile.replaceText(
+    [componentUsage.getStart(), componentUsage.getEnd()],
+    newComponentUsage
+  );
 }
