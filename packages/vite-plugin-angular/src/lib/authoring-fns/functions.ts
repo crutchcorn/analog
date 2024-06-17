@@ -89,8 +89,18 @@ function processFunctionFile(
     transformComponentUsage(sourceFile, componentUsage, entityName, isProd);
   });
 
-  // Remove the import of `@analog/angular-fn`
-  const importToRemove = sourceFile.getImportDeclaration('@analog/angular-fn');
+  /**
+   * Remove the import of `@analog/angular-fn`
+   *
+   * For some reason, `fnImport.remove()` doesn't work, so we have to do it manually
+   */
+  const allImports = sourceFile.getImportDeclarations();
+  const importToRemove = allImports.find((importDeclaration) => {
+    return importDeclaration
+      .getNamedImports()
+      .find((namedImport) => namedImport.getName() === componentName);
+  });
+
   if (importToRemove) {
     importToRemove.remove();
   }
