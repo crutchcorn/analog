@@ -58,6 +58,14 @@ export interface PluginOptions {
       | {
           include: string[];
         };
+    /**
+     * Enable experimental support for Angular function components
+     */
+    supportFunctionComponents?:
+      | boolean
+      | {
+          include: string[];
+        };
     markdownTemplateTransforms?: MarkdownTemplateTransform[];
   };
   supportedBrowsers?: string[];
@@ -105,6 +113,8 @@ export function angular(options?: PluginOptions): Plugin[] {
     supportedBrowsers: options?.supportedBrowsers ?? ['safari 15'],
     jit: options?.experimental?.supportAnalogFormat ? false : options?.jit,
     supportAnalogFormat: options?.experimental?.supportAnalogFormat ?? false,
+    supportFunctionComponents:
+      options?.experimental?.supportFunctionComponents ?? false,
     markdownTemplateTransforms:
       options?.experimental?.markdownTemplateTransforms ??
       defaultMarkdownTemplateTransforms,
@@ -498,7 +508,10 @@ export function angular(options?: PluginOptions): Plugin[] {
         supportJitMode: false,
       });
 
-    if (pluginOptions.supportAnalogFormat) {
+    if (
+      pluginOptions.supportAnalogFormat ||
+      pluginOptions.supportFunctionComponents
+    ) {
       // Experimental Local Compilation is necessary
       // for the Angular compiler to work with
       // AOT and virtually compiled .analog files.
