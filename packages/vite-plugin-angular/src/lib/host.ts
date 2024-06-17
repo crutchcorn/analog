@@ -68,19 +68,17 @@ export function augmentHostWithResources(
         }
       }
 
-      if (options.supportFunctionComponents) {
-        if (fileName.endsWith('.ts')) {
-          const contents = readFileSync(fileName, 'utf-8');
-          const source = compileAngularFn(fileName, contents, options.isProd);
+      if (options.supportFunctionComponents && fileName.endsWith('.ts')) {
+        const contents = readFileSync(fileName, 'utf-8');
+        const source = compileAngularFn(fileName, contents, options.isProd);
 
-          return ts.createSourceFile(
-            fileName,
-            source,
-            languageVersionOrOptions,
-            onError as any,
-            ...(parameters as any)
-          );
-        }
+        return ts.createSourceFile(
+          fileName,
+          source,
+          languageVersionOrOptions,
+          onError as any,
+          ...(parameters as any)
+        );
       }
 
       return baseGetSourceFile.call(

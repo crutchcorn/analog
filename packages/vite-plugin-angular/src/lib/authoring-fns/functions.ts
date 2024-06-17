@@ -6,6 +6,7 @@ import {
   SourceFile,
   SyntaxKind,
 } from 'ts-morph';
+import { basename } from 'path';
 
 import { toClassName } from '../authoring/analog.js';
 
@@ -14,7 +15,8 @@ export function compileAngularFn(
   fileContent: string,
   shouldFormat = false
 ) {
-  const componentName = filePath.split('/').pop()?.split('.')[0];
+  const componentName = basename(filePath).split('.')[0];
+
   if (!componentName) {
     throw new Error(`[Analog] Missing component name ${filePath}`);
   }
@@ -37,7 +39,7 @@ function processFunctionFile(
   entityName: string,
   isProd?: boolean
 ) {
-  const fnImport = sourceFile.getImportDeclaration('@analog/angular-fn');
+  const fnImport = sourceFile.getImportDeclaration('@analogjs/angular-fn');
 
   if (!fnImport) {
     // [Analog] Missing import of \`@analog/angular-fn\` in ${fileName}

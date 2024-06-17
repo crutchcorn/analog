@@ -2,7 +2,7 @@ class NoFunctionError extends Error {
   constructor() {
     super(
       `
-You've attempted to use \`@analog/angular-fn\` without enabling the authoring functionality in the Vite plugin.
+You've attempted to use \`@analogjs/angular-fn\` without enabling the authoring functionality in the Vite plugin.
 
 To enable the authoring functionality, add the following to your Vite config:
 

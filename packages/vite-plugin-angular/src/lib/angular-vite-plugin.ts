@@ -530,6 +530,7 @@ export function angular(options?: PluginOptions): Plugin[] {
       augmentHostWithResources(host, styleTransform, {
         inlineStylesExtension: pluginOptions.inlineStylesExtension,
         supportAnalogFormat: pluginOptions.supportAnalogFormat,
+        supportFunctionComponents: pluginOptions.supportFunctionComponents,
         isProd,
         markdownTemplateTransforms: pluginOptions.markdownTemplateTransforms,
       });
