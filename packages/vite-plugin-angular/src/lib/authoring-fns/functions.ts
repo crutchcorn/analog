@@ -184,7 +184,8 @@ function transformComponentUsage(
   const returnObject = `{ ${varNames
     .map((varName) => `${varName}: ${varName}`)
     .join(', ')} }`;
-  fnBlock.replaceWithText(`${fnBlock.getText()};return ${returnObject};`);
+
+  fnBlock.addStatements(`return ${returnObject};`);
 
   return `
     @Component(${componentMetadata})
