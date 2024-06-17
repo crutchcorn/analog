@@ -1,0 +1,28 @@
+{
+  "name": "@analogjs/angular-fn",
+  "version": "0.0.1-alpha.1",
+  "description": "Use functions to write Angular components",
+  "type": "module",
+  "author": "Corbin Crutchley <git@crutchcorn.com>",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "types": "./src/index.d.ts",
+  "keywords": [
+    "angular",
+    "functions"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/analogjs/analog/issues"
+  },
+  "homepage": "https://analogjs.org",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/analogjs/analog.git"
+  },
+  "peerDependencies": {
+    "@analogjs/vite-plugin-angular": ">=1.0.0"
+  }
+}
