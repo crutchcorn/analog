@@ -7,10 +7,7 @@ import {
   SyntaxKind,
 } from 'ts-morph';
 
-import { createRequire } from 'node:module';
 import { toClassName } from '../authoring/analog';
-
-const require = createRequire(import.meta.url);
 
 export function compileAngularFn(
   filePath: string,
@@ -40,42 +37,25 @@ function processFunctionFile(
   entityName: string,
   isProd?: boolean
 ) {
-  const analogFnImport = sourceFile
-    .getImportDeclarations()
-    .find(
-      (importDeclaration) =>
-        importDeclaration.getModuleSpecifierValue() === '@analog/angular-fn'
-    );
+  const fnImport = sourceFile.getImportDeclaration('@analog/angular-fn');
 
-  if (!analogFnImport) {
-    // Nothing to transform
+  if (!fnImport) {
+    // [Analog] Missing import of \`@analog/angular-fn\` in ${fileName}
     return sourceFile.getText();
   }
 
-  const analogFnImportStructure = analogFnImport.getStructure();
-  const analogFnImportNamedImports = analogFnImportStructure.namedImports;
-  // TODO: Handle `import * as Analog from '@analog/angular-fn'`
-  if (!analogFnImportNamedImports) {
-    throw new Error(
-      `[Analog] Missing \`Component\` import from \`@analog/angular-fn\` in ${fileName}`
-    );
-  }
+  const componentImport = fnImport.getNamedImports().find((namedImport) => {
+    return namedImport.getName() === 'Component';
+  });
 
-  const componentName = Array.isArray(analogFnImportNamedImports)
-    ? analogFnImportNamedImports.find((namedImport) =>
-        typeof namedImport === 'string'
-          ? namedImport === 'Component'
-          : namedImport.name === 'Component'
-      )
-    : analogFnImportNamedImports.name === 'Component'
-    ? analogFnImportNamedImports
-    : undefined;
-
-  if (!componentName) {
+  if (!componentImport) {
     throw new Error(
       `[Analog] Missing named import of \`Component\` from \`@analog/angular-fn\` in ${fileName}`
     );
   }
+
+  const componentName =
+    componentImport.getAliasNode()?.getText() || 'Component';
 
   /**
    * `import {Component as AComponent} from "@analog/angular-fn";`
