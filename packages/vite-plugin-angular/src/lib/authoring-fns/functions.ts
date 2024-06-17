@@ -7,7 +7,7 @@ import {
   SyntaxKind,
 } from 'ts-morph';
 
-import { toClassName } from '../authoring/analog';
+import { toClassName } from '../authoring/analog.js';
 
 export function compileAngularFn(
   filePath: string,

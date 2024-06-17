@@ -29,4 +29,6 @@ Without this configuration, any of the runtime behavior that depends on the auth
   }
 }
 
-export const Component = () => throw new NoFunctionError();
+export const Component = () => {
+  throw new NoFunctionError();
+};
