@@ -1,8 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`authoring functions > should process component as an analog file 1`] = `
-"import {Component} from "@analog/angular-fn";
-import {effect, signal} from "@angular/core";
+"import {effect, signal} from "@angular/core";
+import { Component } from "@angular/core";
 
 export default 
     @Component({

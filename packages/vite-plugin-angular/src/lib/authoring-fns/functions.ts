@@ -87,6 +87,18 @@ function processFunctionFile(
     transformComponentUsage(sourceFile, componentUsage, entityName, isProd);
   });
 
+  // Remove the import of `@analog/angular-fn`
+  const importToRemove = sourceFile.getImportDeclaration('@analog/angular-fn');
+  if (importToRemove) {
+    importToRemove.remove();
+  }
+
+  // Add the import of `@angular/core`
+  sourceFile.addImportDeclaration({
+    moduleSpecifier: '@angular/core',
+    namedImports: ['Component'],
+  });
+
   return sourceFile.getText();
 }
 
