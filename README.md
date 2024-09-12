@@ -3,7 +3,7 @@
 A utility for building Angular components as functions.
 
 > This project heavily borrows code from [Analog](https://github.com/analogjs/analog).
-> 
+>
 > Moreover, this project is a proof of concept and is not intended for production use.
 
 ## Install
@@ -39,8 +39,8 @@ export default defineConfig({
 ## Usage
 
 ```ts
-import {Component} from "ng-comp-fn";
-import {effect, signal} from "@angular/core";
+import { Component } from 'ng-comp-fn';
+import { effect, signal } from '@angular/core';
 
 // Accepts all Angular @Component options
 export default Component({
@@ -48,7 +48,7 @@ export default Component({
   standalone: true,
   template: `
     <button (click)="add()">{{count}}</button>
-  `
+  `,
 })(() => {
   // All variables declared here are exposed to the template
   const count = signal(0);
@@ -62,6 +62,6 @@ export default Component({
   // Effects are also supported without needing a variable
   effect(() => {
     console.log(count());
-  })
-})
+  });
+});
 ```
