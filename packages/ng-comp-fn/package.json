@@ -1,5 +1,5 @@
 {
-  "name": "@analogjs/angular-fn",
+  "name": "ng-comp-fn",
   "version": "0.0.1-alpha.1",
   "description": "Use functions to write Angular components",
   "type": "module",

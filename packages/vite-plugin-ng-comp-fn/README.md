@@ -1,10 +1,10 @@
-# @analogjs/vite-plugin-angular
+# vite-plugin-ng-comp-fn
 
-A Vite plugin for building Angular applications
+A Vite plugin for building Angular components as functions.
 
 ## Install
 
-yarn add @analogjs/vite-plugin-angular
+yarn add vite-plugin-ng-comp-fn
 
 ## Setup
 
@@ -12,7 +12,7 @@ Add the plugin to the `plugins` array in your Vite config
 
 ```ts
 import { defineConfig } from 'vite';
-import angular from '@analogjs/vite-plugin-angular';
+import angularFn from 'vite-plugin-ng-comp-fn';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -20,6 +20,6 @@ export default defineConfig({
     mainFields: ['module'],
   },
 
-  plugins: [angular()],
+  plugins: [angularFn()],
 });
 ```

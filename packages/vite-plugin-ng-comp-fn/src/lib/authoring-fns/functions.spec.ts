@@ -1,7 +1,7 @@
 import { compileAngularFn } from './functions';
 
 const COMPONENT_CONTENT = `
-import {Component} from "@analogjs/angular-fn";
+import {Component} from "ng-comp-fn";
 import {effect, signal} from "@angular/core";
 
 export default Component({

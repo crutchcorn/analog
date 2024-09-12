@@ -37,7 +37,7 @@ function processFunctionFile(
   entityName: string,
   isProd?: boolean
 ) {
-  const fnImport = sourceFile.getImportDeclaration('@analogjs/angular-fn');
+  const fnImport = sourceFile.getImportDeclaration('ng-comp-fn');
 
   if (!fnImport) {
     // [Analog] Missing import of \`@analog/angular-fn\` in ${fileName}

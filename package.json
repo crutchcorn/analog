@@ -1,6 +1,6 @@
 {
-  "name": "analogjs-platform",
-  "version": "1.5.1-beta.1",
+  "name": "ng-comp-fn-platform",
+  "version": "0.0.1",
   "license": "MIT",
   "type": "module",
   "scripts": {
