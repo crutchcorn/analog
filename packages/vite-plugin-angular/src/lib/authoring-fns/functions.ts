@@ -8,8 +8,6 @@ import {
 } from 'ts-morph';
 import { basename } from 'path';
 
-import { toClassName } from '../authoring/analog.js';
-
 export function compileAngularFn(
   filePath: string,
   fileContent: string,
@@ -224,4 +222,30 @@ function transformComponentUsage(
     [componentUsage.getStart(), componentUsage.getEnd()],
     newComponentUsage
   );
+}
+
+/**
+ * Hyphenated to UpperCamelCase
+ */
+export function toClassName(str: string) {
+  return toCapitalCase(toPropertyName(str));
+}
+/**
+ * Hyphenated to lowerCamelCase
+ */
+function toPropertyName(str: string) {
+  return str
+    .replace(/([^a-zA-Z0-9])+(.)?/g, (_, __, chr) =>
+      chr ? chr.toUpperCase() : ''
+    )
+    .replace(/[^a-zA-Z\d]/g, '')
+    .replace(/^([A-Z])/, (m) => m.toLowerCase())
+    .replace(/^\d+/, '');
+}
+
+/**
+ * Capitalizes the first letter of a string
+ */
+function toCapitalCase(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }

@@ -32,12 +32,6 @@ import { angularVitestPlugin } from './angular-vitest-plugin.js';
 
 const require = createRequire(import.meta.url);
 
-import { getFrontmatterMetadata } from './authoring/frontmatter.js';
-import {
-  defaultMarkdownTemplateTransforms,
-  MarkdownTemplateTransform,
-} from './authoring/markdown-transform.js';
-
 export interface PluginOptions {
   tsconfig?: string;
   workspaceRoot?: string;
@@ -51,14 +45,6 @@ export interface PluginOptions {
   };
   experimental?: {
     /**
-     * Enable experimental support for Analog file extension
-     */
-    supportAnalogFormat?:
-      | boolean
-      | {
-          include: string[];
-        };
-    /**
      * Enable experimental support for Angular function components
      */
     supportFunctionComponents?:
@@ -66,7 +52,6 @@ export interface PluginOptions {
       | {
           include: string[];
         };
-    markdownTemplateTransforms?: MarkdownTemplateTransform[];
   };
   supportedBrowsers?: string[];
   transformFilter?: (code: string, id: string) => boolean;
@@ -111,13 +96,11 @@ export function angular(options?: PluginOptions): Plugin[] {
       },
     },
     supportedBrowsers: options?.supportedBrowsers ?? ['safari 15'],
-    jit: options?.experimental?.supportAnalogFormat ? false : options?.jit,
-    supportAnalogFormat: options?.experimental?.supportAnalogFormat ?? false,
     supportFunctionComponents:
       options?.experimental?.supportFunctionComponents ?? false,
-    markdownTemplateTransforms:
-      options?.experimental?.markdownTemplateTransforms ??
-      defaultMarkdownTemplateTransforms,
+    jit: options?.experimental?.supportFunctionComponents
+      ? false
+      : options?.jit,
   };
 
   // The file emitter created during `onStart` that will be used during the build in `onLoad` callbacks for TS files
@@ -384,21 +367,6 @@ export function angular(options?: PluginOptions): Plugin[] {
             /for\s+await\s*\(|async\s+function\s*\*/.test(data);
           const useInputSourcemap = (!isProd ? undefined : false) as undefined;
 
-          if (
-            (id.endsWith('.analog') || id.endsWith('.agx')) &&
-            pluginOptions.supportAnalogFormat &&
-            fileEmitter
-          ) {
-            sourceFileCache.invalidate([`${id}.ts`]);
-            const ngFileResult = await fileEmitter!(`${id}.ts`);
-            data = ngFileResult?.content || '';
-
-            if (id.includes('.agx')) {
-              const metadata = await getFrontmatterMetadata(code);
-              data += metadata;
-            }
-          }
-
           if (!forceAsyncTransformation && !isProd) {
             return {
               code: data.replace(/^\/\/# sourceMappingURL=[^\r\n]*/gm, ''),
@@ -455,41 +423,8 @@ export function angular(options?: PluginOptions): Plugin[] {
     }),
   ].filter(Boolean) as Plugin[];
 
-  function findAnalogFiles(config: UserConfig) {
-    const analogConfig = pluginOptions.supportAnalogFormat;
-    if (!analogConfig) {
-      return [];
-    }
-
-    let extraGlobs: string[] = [];
-
-    if (typeof analogConfig === 'object') {
-      if (analogConfig.include) {
-        extraGlobs = analogConfig.include;
-      }
-    }
-
-    const fg = require('fast-glob');
-    const appRoot = normalizePath(
-      resolve(pluginOptions.workspaceRoot, config.root || '.')
-    );
-    const workspaceRoot = normalizePath(resolve(pluginOptions.workspaceRoot));
-
-    const globs = [
-      `${appRoot}/**/*.{analog,agx}`,
-      ...extraGlobs.map((glob) => `${workspaceRoot}${glob}.{analog,agx}`),
-    ];
-
-    return fg
-      .sync(globs, {
-        dot: true,
-      })
-      .map((file: string) => `${file}.ts`);
-  }
-
   function setupCompilation(config: UserConfig, context?: unknown) {
-    const analogFiles = findAnalogFiles(config);
-    const { options: tsCompilerOptions, rootNames: rn } =
+    const { options: tsCompilerOptions, rootNames } =
       compilerCli.readConfiguration(pluginOptions.tsconfig, {
         suppressOutputPathCheck: true,
         outDir: undefined,
@@ -509,7 +444,6 @@ export function angular(options?: PluginOptions): Plugin[] {
       });
 
     if (
-      pluginOptions.supportAnalogFormat ||
       pluginOptions.supportFunctionComponents
     ) {
       // Experimental Local Compilation is necessary
@@ -518,7 +452,6 @@ export function angular(options?: PluginOptions): Plugin[] {
       tsCompilerOptions.compilationMode = 'experimental-local';
     }
 
-    rootNames = rn.concat(analogFiles);
     compilerOptions = tsCompilerOptions;
     host = ts.createIncrementalCompilerHost(compilerOptions);
 
@@ -528,11 +461,8 @@ export function angular(options?: PluginOptions): Plugin[] {
 
     if (!jit) {
       augmentHostWithResources(host, styleTransform, {
-        inlineStylesExtension: pluginOptions.inlineStylesExtension,
-        supportAnalogFormat: pluginOptions.supportAnalogFormat,
         supportFunctionComponents: pluginOptions.supportFunctionComponents,
         isProd,
-        markdownTemplateTransforms: pluginOptions.markdownTemplateTransforms,
       });
     }
   }
