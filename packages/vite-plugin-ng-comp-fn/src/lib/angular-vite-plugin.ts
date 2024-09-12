@@ -443,9 +443,7 @@ export function angular(options?: PluginOptions): Plugin[] {
         supportJitMode: false,
       });
 
-    if (
-      pluginOptions.supportFunctionComponents
-    ) {
+    if (pluginOptions.supportFunctionComponents) {
       // Experimental Local Compilation is necessary
       // for the Angular compiler to work with
       // AOT and virtually compiled .analog files.
