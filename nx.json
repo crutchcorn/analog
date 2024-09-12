@@ -23,13 +23,6 @@
       "dependsOn": ["^build"],
       "cache": false
     },
-    "e2e": {
-      "dependsOn": ["^build"],
-      "cache": false
-    },
-    "serve": {
-      "dependsOn": ["^build"]
-    },
     "build-package": {
       "cache": false
     },

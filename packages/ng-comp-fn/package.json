@@ -15,14 +15,13 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/analogjs/analog/issues"
+    "url": "https://github.com/crutchcorn/ng-comp-fn/issues"
   },
-  "homepage": "https://analogjs.org",
   "repository": {
     "type": "git",
-    "url": "https://github.com/analogjs/analog.git"
+    "url": "https://github.com/crutchcorn/ng-comp-fn.git"
   },
   "peerDependencies": {
-    "@analogjs/vite-plugin-angular": ">=1.0.0"
+    "vite-plugin-ng-comp-fn": "0.0.1-alpha.1"
   }
 }

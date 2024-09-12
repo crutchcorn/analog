@@ -1,10 +1,12 @@
-# vite-plugin-ng-comp-fn
+# `vite-plugin-ng-comp-fn`
 
 A Vite plugin for building Angular components as functions.
 
 ## Install
 
+```shell
 yarn add vite-plugin-ng-comp-fn
+```
 
 ## Setup
 
@@ -20,6 +22,12 @@ export default defineConfig({
     mainFields: ['module'],
   },
 
-  plugins: [angularFn()],
+  plugins: [
+    angularFn({
+      experimental: {
+        supportFunctionComponents: true,
+      },
+    }),
+  ],
 });
 ```
